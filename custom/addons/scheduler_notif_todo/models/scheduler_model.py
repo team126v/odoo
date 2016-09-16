@@ -17,12 +17,17 @@ class res_partner(models.Model):
     def _get_messages_by_email(self, cr, uid, ids=None, context=None):
         today = datetime.datetime.now()
         today_to_s = today.strftime('%Y-%m-%d')
-        query = '''SELECT res_partner.email as email, crm_lead.name as lead_name, crm_lead.date_action as date_action, crm_lead.title_action as title
+        query = '''SELECT res_partner.email as email, crm_lead.name as lead_name, crm_lead.date_action as date_action, crm_lead.title_action as title,
+                    mail_message_subtype.name as action_name
                     FROM res_users
                     JOIN crm_lead
                         ON crm_lead.user_id = res_users.id
                     JOIN res_partner
                         ON res_users.partner_id = res_partner.id
+                    JOIN crm_activity
+                        ON crm_lead.next_activity_id = crm_activity.id
+                    JOIN mail_message_subtype
+                        ON crm_activity.subtype_id = mail_message_subtype.id
                     WHERE crm_lead.date_action=%s'''
         cr.execute(query, (today_to_s,))
         messages = cr.dictfetchall()
@@ -37,12 +42,14 @@ class res_partner(models.Model):
         if mess_by_email:
             try:
                 for k,v in mess_by_email.iteritems():
+                    #_logger.info('%s -> %s', k, v)
                     email_from = k
                     subject = "Today work need to be done"
                     body = "Good morning,<br/> Here are tasks need to be done to day:<br/>"
                     for i in v:
-                        body += "<h5>- %s on lead: %s</h5><br/>" %(i['title'], i['lead_name'])
+                        body += "<h5>- %s (%s) on lead: %s</h5><br/>" %(i['action_name'], i['title'], i['lead_name'])
                     body += "<br/> Have a Nice day!"
+                    #_logger.info('%s', body)
 
                     mail_ids.append(mail_mail.create(cr, uid, {
                         'email_to': email_from,
