@@ -34,6 +34,13 @@ class sale_order(models.Model):
     def action_quotation_approve(self):
         self.write({'state': 'approve'})
 
+    @api.onchange('crm_lead_id')
+    def _onchange_crm_lead_id(self):
+        # this will set crm_lead_id on record new creation
+        if not self.crm_lead_id and self.opportunity_id:
+            self.crm_lead_id = self.opportunity_id
+        self.opportunity_id = self.crm_lead_id
+
     @api.onchange('templete_id')
     def _onchange_is_templete(self):
         if self.templete_id:
