@@ -2,6 +2,9 @@ import time
 import re
 from lxml import etree
 
+_phone_reg = '^(\+?\d{1,2}[ -]?)?(\(\+?\d{1,4}\)|\+?\d{1,4})?[ -]?\d{3,4}[ -]?\d{3,4}$'
+_email_reg = '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
+
 from openerp import models, fields, api, tools, _
 class sale_order(models.Model):
     _inherit = 'sale.order'
@@ -122,3 +125,43 @@ class crm_lead(models.Model):
             self.sg_fax = partner.fax
             self.sg_zip = partner.zip
             self.sg_function = partner.function
+
+    @api.constrains('email_from')
+    def _validate_email(self):
+        if not re.match(_email_reg, self.email_from):
+            raise Warning(_("Invalid e-mail"))
+
+    @api.constrains('sg_email_from')
+    def _validate_email(self):
+        if not re.match(_email_reg, self.sg_email_from):
+            raise Warning(_("Invalid e-mail 2"))
+
+    @api.constrains('phone')
+    def _validate_phone(self):
+        if not re.match(_phone_reg, self.phone):
+            raise Warning(_("Invalid phone number"))
+
+    @api.constrains('sg_phone')
+    def _validate_phone(self):
+        if not re.match(_phone_reg, self.sg_phone):
+            raise Warning(_("Invalid phone number 2"))
+
+    @api.constrains('fax')
+    def _validate_fax(self):
+        if not re.match(_phone_reg, self.fax):
+            raise Warning(_("Invalid fax number"))
+
+    @api.constrains('sg_fax')
+    def _validate_fax(self):
+        if not re.match(_phone_reg, self.sg_fax):
+            raise Warning(_("Invalid fax number 2"))
+
+    @api.constrains('mobile')
+    def _validate_mobile(self):
+        if not re.match(_phone_reg, self.mobile):
+            raise Warning(_("Invalid mobile number"))
+
+    @api.constrains('sg_mobile')
+    def _validate_mobile(self):
+        if not re.match(_phone_reg, self.sg_mobile):
+            raise Warning(_("Invalid mobile number 2"))

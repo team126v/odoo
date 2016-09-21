@@ -184,6 +184,16 @@ var FieldChar = common.AbstractField.extend(common.ReinitializeFieldMixin, {
             height: height,
             width: width
         });
+    },
+    to_halfwidth: function () {
+        var halfwidth = (this.get('value')||'').replace(/[！-～]/g,
+            function( tmpStr ) {
+                return String.fromCharCode( tmpStr.charCodeAt(0) - 0xFEE0 );
+            }
+        );
+        halfwidth = (halfwidth||'').replace(/　/g, ' ');
+        halfwidth = (halfwidth||'').replace(/ー/g, '-');
+        this.set('value', halfwidth);
     }
 });
 
@@ -360,6 +370,17 @@ var FieldEmail = FieldChar.extend({
         } else {
             location.href = 'mailto:' + this.get('value');
         }
+    },
+    store_dom_value: function () {
+        this._super();
+        this.to_halfwidth();
+    }
+});
+
+var FieldPhone = FieldChar.extend({
+    store_dom_value: function () {
+        this._super();
+        this.to_halfwidth();
     }
 });
 
@@ -1764,6 +1785,7 @@ core.form_widget_registry
     .add('char', FieldChar)
     .add('id', FieldID)
     .add('email', FieldEmail)
+    .add('phone', FieldPhone)
     .add('url', FieldUrl)
     .add('text',FieldText)
     .add('char_domain', FieldCharDomain)

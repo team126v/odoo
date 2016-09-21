@@ -97,6 +97,12 @@
                 <xpath expr="//page[@name='lead']/group/group[4]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
+                <xpath expr="//field[@name='mobile']" position="attributes">
+                    <attribute name="widget">phone</attribute>
+                </xpath>
+                <xpath expr="//field[@name='fax']" position="attributes">
+                    <attribute name="widget">phone</attribute>
+                </xpath>
                 <xpath expr="//page[@name='lead']/group/group[2]" position="after">
                     <group>
                         <field name="sg_partner_name"/>
@@ -116,9 +122,10 @@
                             <field name="sg_contact_name"/>
                         </div>
                         <field name="sg_function"/>
-                        <field name="sg_phone"/>
-                        <field name="sg_mobile"/>
-                        <field name="sg_fax"/>
+                        <field name="sg_email_from" widget="email"/>
+                        <field name="sg_phone" widget="phone"/>
+                        <field name="sg_mobile" widget="phone"/>
+                        <field name="sg_fax" widget="phone"/>
                     </group>
                 </xpath>
             </field>
@@ -138,6 +145,10 @@
         <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter" />
         <field name="model">crm.lead</field>
         <field name="arch" type="xml">
+            <!-- this is for preventing Model._where_calc() to add active=True to Won filter -->
+            <xpath expr="//filter[@name='won']" position="attributes">
+                <attribute name="domain">['&amp;', '|', ('active', '=', True), ('active', '=', False), '&amp;', ('stage_id.probability', '=', 100), ('stage_id.fold', '=', True)]</attribute>
+            </xpath>
             <xpath expr="//filter[@name='stage']/following-sibling::filter[1]" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
