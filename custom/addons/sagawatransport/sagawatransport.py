@@ -134,7 +134,7 @@ class crm_lead(models.Model):
     @api.constrains('sg_email_from')
     def _validate_sg_email(self):
         if self.sg_email_from and not re.match(_email_reg, self.sg_email_from):
-            raise Warning(_("Invalid customer 2's e-mail "))
+            raise Warning(_("Invalid customer 2's e-mail"))
 
     @api.constrains('phone')
     def _validate_phone(self):
