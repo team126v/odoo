@@ -128,40 +128,40 @@ class crm_lead(models.Model):
 
     @api.constrains('email_from')
     def _validate_email(self):
-        if not re.match(_email_reg, self.email_from):
+        if self.email_from and not re.match(_email_reg, self.email_from):
             raise Warning(_("Invalid e-mail"))
 
     @api.constrains('sg_email_from')
-    def _validate_email(self):
-        if not re.match(_email_reg, self.sg_email_from):
-            raise Warning(_("Invalid e-mail 2"))
+    def _validate_sg_email(self):
+        if self.sg_email_from and not re.match(_email_reg, self.sg_email_from):
+            raise Warning(_("Invalid customer 2's e-mail "))
 
     @api.constrains('phone')
     def _validate_phone(self):
-        if not re.match(_phone_reg, self.phone):
+        if self.phone and not re.match(_phone_reg, self.phone):
             raise Warning(_("Invalid phone number"))
 
     @api.constrains('sg_phone')
-    def _validate_phone(self):
-        if not re.match(_phone_reg, self.sg_phone):
-            raise Warning(_("Invalid phone number 2"))
+    def _validate_sg_phone(self):
+        if self.sg_phone and not re.match(_phone_reg, self.sg_phone):
+            raise Warning(_("Invalid customer 2's phone number"))
 
     @api.constrains('fax')
     def _validate_fax(self):
-        if not re.match(_phone_reg, self.fax):
+        if self.fax and not re.match(_phone_reg, self.fax):
             raise Warning(_("Invalid fax number"))
 
     @api.constrains('sg_fax')
-    def _validate_fax(self):
-        if not re.match(_phone_reg, self.sg_fax):
-            raise Warning(_("Invalid fax number 2"))
+    def _validate_sg_fax(self):
+        if self.sg_fax and not re.match(_phone_reg, self.sg_fax):
+            raise Warning(_("Invalid customer 2's fax number"))
 
     @api.constrains('mobile')
     def _validate_mobile(self):
-        if not re.match(_phone_reg, self.mobile):
+        if self.mobile and not re.match(_phone_reg, self.mobile):
             raise Warning(_("Invalid mobile number"))
 
     @api.constrains('sg_mobile')
-    def _validate_mobile(self):
-        if not re.match(_phone_reg, self.sg_mobile):
-            raise Warning(_("Invalid mobile number 2"))
+    def _validate_sg_mobile(self):
+        if self.sg_mobile and not re.match(_phone_reg, self.sg_mobile):
+            raise Warning(_("Invalid customer 2's mobile number"))

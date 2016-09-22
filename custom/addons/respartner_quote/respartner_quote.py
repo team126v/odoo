@@ -21,20 +21,20 @@ class res_partner(models.Model):
 
     @api.constrains('email')
     def _validate_email(self):
-        if not re.match(_email_reg, self.email):
+        if self.email and not re.match(_email_reg, self.email):
             raise Warning(_("Invalid e-mail"))
 
     @api.constrains('phone')
     def _validate_phone(self):
-        if not re.match(_phone_reg, self.phone):
+        if self.phone and not re.match(_phone_reg, self.phone):
             raise Warning(_("Invalid phone number"))
 
     @api.constrains('fax')
     def _validate_fax(self):
-        if not re.match(_phone_reg, self.fax):
+        if self.fax and not re.match(_phone_reg, self.fax):
             raise Warning(_("Invalid fax number"))
 
     @api.constrains('mobile')
     def _validate_mobile(self):
-        if not re.match(_phone_reg, self.mobile):
+        if self.mobile and not re.match(_phone_reg, self.mobile):
             raise Warning(_("Invalid mobile number"))
